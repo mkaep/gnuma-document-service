@@ -1,0 +1,8 @@
+token	pos_tags	chunk_tags	ner_tags
+Japan NNP B-NP B-LOC
+began VBD B-VP O
+the DT B-NP O
+
+defence NN I-NP O
+of IN B-PP O
+. . O O

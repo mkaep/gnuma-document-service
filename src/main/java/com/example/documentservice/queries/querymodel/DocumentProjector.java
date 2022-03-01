@@ -1,6 +1,7 @@
 package com.example.documentservice.queries.querymodel;
 
 import com.example.documentservice.Sentence;
+import com.example.documentservice.events.CreatedAugmentedDocumentEvent;
 import com.example.documentservice.events.CreatedDocumentEvent;
 import com.example.documentservice.events.DeletedDocumentEvent;
 import com.example.documentservice.events.UpdatedDocumentEvent;
@@ -30,7 +31,16 @@ public class DocumentProjector {
 
         DocumentView documentView = new DocumentView(event.getId(), event.getTitle(), event.getDomain(), event.getSource(),
                 event.getContributor(), event.getCitationInformation(), event.getDataFields(), event.getTasks(),
-                sentences, event.getAugmented(), event.getRootDocument());
+                sentences, false, null, null);
+        repository.save(documentView);
+    }
+
+    @EventHandler
+    public void handle(CreatedAugmentedDocumentEvent event) {
+
+        DocumentView documentView = new DocumentView(event.getId(), event.getTitle(), event.getDomain(), event.getSource(),
+                event.getContributor(), event.getCitationInformation(), event.getDataFields(), event.getTasks(),
+                event.getSentences(), event.getAugmented(), event.getAugmentationInfos(), event.getRootDocument());
         repository.save(documentView);
     }
 

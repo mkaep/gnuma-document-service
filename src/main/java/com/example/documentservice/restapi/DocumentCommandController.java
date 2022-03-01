@@ -1,9 +1,8 @@
 package com.example.documentservice.restapi;
 
-import com.example.documentservice.commands.CreateDocumentCommand;
-import com.example.documentservice.commands.DeleteDocumentCommand;
-import com.example.documentservice.commands.PatchDocumentCommand;
-import com.example.documentservice.commands.UpdateDocumentCommand;
+import com.example.documentservice.AugmentationInfo;
+import com.example.documentservice.commands.*;
+import com.example.documentservice.dto.AugmentedDocumentDTO;
 import com.example.documentservice.dto.DocumentDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -28,21 +27,31 @@ public class DocumentCommandController {
     }
 
     @CrossOrigin
-    @PostMapping
+    @PostMapping(value="/new")
     public CompletableFuture<String> createDocument(@ModelAttribute DocumentDTO dto) {
         return commandGateway.send(new CreateDocumentCommand(dto.getTitle(), dto.getDomain(), dto.getSource(), dto.getContributor(),
-                dto.getCitationInformation(), dto.getDataFields(), dto.getTasks(), dto.getData(),
-                dto.getAugmented(), dto.getRootDocument()));
+                dto.getCitationInformation(), dto.getDataFields(), dto.getTasks(), dto.getData()));
     }
 
     @CrossOrigin
+    @PostMapping(value="/augmented")
+    public CompletableFuture<String> createAugmentedDocument(@ModelAttribute AugmentedDocumentDTO dto) {
+        System.out.println(dto);
+        return commandGateway.send(new CreateAugmentedDocumentCommand(dto.getTitle(), dto.getDomain(), dto.getSource(), dto.getContributor(),
+                dto.getCitationInformation(), dto.getDataFields(), dto.getTasks(), dto.getSentences(), dto.getAugmented(), dto.getAugmentationInfos(), dto.getRootDocument()));
+    }
+
+
+    /**
+    @CrossOrigin
     @PutMapping(value="/{id}")
-    public CompletableFuture<String> updateDocument(@PathVariable String id, @ModelAttribute DocumentDTO dto) {
+    public CompletableFuture<String> updateDocument(@PathVariable String id, @ModelAttribute AugmentedDocumentDTO dto) {
         System.out.println("Received a request for updating a new document");
         return commandGateway.send(new UpdateDocumentCommand(UUID.fromString(id), dto.getTitle(), dto.getDomain(), dto.getSource(), dto.getContributor(),
-                dto.getCitationInformation(), dto.getDataFields(), dto.getTasks(), dto.getData(),
-                dto.getAugmented(), dto.getRootDocument()));
+                dto.getCitationInformation(), dto.getDataFields(), dto.getTasks(), dto.getSentences(),
+                dto.getAugmented(), dto.getAugmentationInfos(), dto.getRootDocument()));
     }
+     */
 
     @CrossOrigin
     @PatchMapping(value="/{id}", consumes = "application/json-patch+json")

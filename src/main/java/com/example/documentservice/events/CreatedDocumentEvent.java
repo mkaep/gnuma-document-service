@@ -1,5 +1,6 @@
 package com.example.documentservice.events;
 
+import com.example.documentservice.AugmentationInfo;
 import com.example.documentservice.DataField;
 import com.example.documentservice.Task;
 import java.io.File;
@@ -17,12 +18,10 @@ public class CreatedDocumentEvent {
     private final List<DataField> dataFields;
     private final List<Task> tasks;
     private final File data;
-    private final boolean augmented;
-    private final UUID rootDocument;
+
 
     public CreatedDocumentEvent(UUID id, String title, String domain, String source, String contributor, String citationInformation,
-                                List<DataField> dataFields, List<Task> tasks, File data,
-                                boolean augmented, UUID rootDocument) {
+                                List<DataField> dataFields, List<Task> tasks, File data) {
         this.id = id;
         this.title = title;
         this.domain = domain;
@@ -34,8 +33,6 @@ public class CreatedDocumentEvent {
         this.data = data;
 
         System.out.println("Hello from the Created Document Event " + this.data);
-        this.augmented = augmented;
-        this.rootDocument = rootDocument;
     }
 
     public UUID getId() {
@@ -74,14 +71,6 @@ public class CreatedDocumentEvent {
         return data;
     }
 
-    public boolean getAugmented() {
-        return augmented;
-    }
-
-    public UUID getRootDocument() {
-        return rootDocument;
-    }
-
     @Override
     public String toString() {
         return "CreatedDocumentEvent{" +
@@ -94,8 +83,6 @@ public class CreatedDocumentEvent {
                 ", dataFields=" + dataFields +
                 ", tasks=" + tasks +
                 ", data=" + data +
-                ", augmented=" + augmented +
-                ", rootDocument=" + rootDocument +
                 '}';
     }
 }

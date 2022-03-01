@@ -1,17 +1,16 @@
-package com.example.documentservice.commands;
+package com.example.documentservice.events;
 
 import com.example.documentservice.AugmentationInfo;
 import com.example.documentservice.DataField;
+import com.example.documentservice.Sentence;
 import com.example.documentservice.Task;
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
-public class UpdateDocumentCommand {
-    @TargetAggregateIdentifier
+public class CreatedAugmentedDocumentEvent {
+
     private final UUID id;
     private final String title;
     private final String domain;
@@ -20,14 +19,14 @@ public class UpdateDocumentCommand {
     private final String citationInformation;
     private final List<DataField> dataFields;
     private final List<Task> tasks;
-    private final File data;
+    private final List<Sentence> sentences;
     private final boolean augmented;
     private final List<AugmentationInfo> augmentationInfos;
     private final UUID rootDocument;
 
-    public UpdateDocumentCommand(UUID id, String title, String domain, String source, String contributor, String citationInformation,
-                                 List<DataField> dataFields, List<Task> tasks, File data,
-                                 boolean augmented, List<AugmentationInfo> augmentationInfos, UUID rootDocument) {
+
+    public CreatedAugmentedDocumentEvent(UUID id, String title, String domain, String source, String contributor, String citationInformation,
+                                         List<DataField> dataFields, List<Task> tasks, List<Sentence> sentences, boolean augmented, List<AugmentationInfo> augmentationInfos, UUID rootDocument) {
         this.id = id;
         this.title = title;
         this.domain = domain;
@@ -36,10 +35,12 @@ public class UpdateDocumentCommand {
         this.citationInformation = citationInformation;
         this.dataFields = dataFields;
         this.tasks = tasks;
-        this.data = data;
+        this.sentences = sentences;
         this.augmented = augmented;
         this.augmentationInfos = augmentationInfos;
         this.rootDocument = rootDocument;
+
+        System.out.println("Hello from the Created Augmented Document Event " + this.sentences);
     }
 
     public UUID getId() {
@@ -49,6 +50,7 @@ public class UpdateDocumentCommand {
     public String getTitle() {
         return title;
     }
+
     public String getDomain() {
         return domain;
     }
@@ -73,11 +75,11 @@ public class UpdateDocumentCommand {
         return tasks;
     }
 
-    public File getData() {
-        return data;
+    public List<Sentence> getSentences() {
+        return sentences;
     }
 
-    public boolean isAugmented() {
+    public boolean getAugmented() {
         return augmented;
     }
 
@@ -90,21 +92,8 @@ public class UpdateDocumentCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UpdateDocumentCommand that = (UpdateDocumentCommand) o;
-        return augmented == that.augmented && id.equals(that.id) && title.equals(that.title) && domain.equals(that.domain) && source.equals(that.source) && contributor.equals(that.contributor) && citationInformation.equals(that.citationInformation) && dataFields.equals(that.dataFields) && tasks.equals(that.tasks) && data.equals(that.data) && Objects.equals(augmentationInfos, that.augmentationInfos) && Objects.equals(rootDocument, that.rootDocument);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, domain, source, contributor, citationInformation, dataFields, tasks, data, augmented, augmentationInfos, rootDocument);
-    }
-
-    @Override
     public String toString() {
-        return "UpdateDocumentCommand{" +
+        return "CreatedDocumentEvent{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", domain='" + domain + '\'' +
@@ -113,9 +102,9 @@ public class UpdateDocumentCommand {
                 ", citationInformation='" + citationInformation + '\'' +
                 ", dataFields=" + dataFields +
                 ", tasks=" + tasks +
-                ", data=" + data +
+                ", sentences=" + sentences +
                 ", augmented=" + augmented +
-                ", augmentationInfos =" + augmentationInfos +
+                ", augmentationInfos=" + augmentationInfos +
                 ", rootDocument=" + rootDocument +
                 '}';
     }

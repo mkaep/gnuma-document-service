@@ -1,9 +1,7 @@
 package com.example.documentservice;
 
-import com.example.documentservice.commands.CreateDocumentCommand;
-import com.example.documentservice.commands.DeleteDocumentCommand;
-import com.example.documentservice.commands.PatchDocumentCommand;
-import com.example.documentservice.commands.UpdateDocumentCommand;
+import com.example.documentservice.commands.*;
+import com.example.documentservice.events.CreatedAugmentedDocumentEvent;
 import com.example.documentservice.events.CreatedDocumentEvent;
 import com.example.documentservice.events.DeletedDocumentEvent;
 import com.example.documentservice.events.UpdatedDocumentEvent;
@@ -32,7 +30,9 @@ public class Document {
     private List<DataField> dataFields;
     private List<Task> tasks;
     private File data;
+    private List<Sentence> sentences;
     private boolean augmented;
+    private List<AugmentationInfo> augmentationInfos;
     private UUID rootDocument;
 
     //Axon Framework needs a non-arg constructor to create an empty aggregate instance beofre initializing it using past events
@@ -53,10 +53,32 @@ public class Document {
         this.tasks = cmd.getTasks();
         this.data = cmd.getData();
         System.out.println("Create Command has received the following file: " + cmd.getData());
-        this.augmented = cmd.isAugmented();
-        this.rootDocument = cmd.getRootDocument();
+        this.sentences = null;
+        this.augmented = false;
+        this.augmentationInfos = null;
+        this.rootDocument = null;
         AggregateLifecycle.apply(new CreatedDocumentEvent(documentId, title, domain, source, contributor,
-                citationInformation, dataFields, tasks, data, augmented, rootDocument));
+                citationInformation, dataFields, tasks, data));
+    }
+
+    @CommandHandler
+    public Document(CreateAugmentedDocumentCommand cmd) {
+        //Publish the message internally to this aggregate and aggregate members and later on to the event bus
+        UUID documentId = UUID.randomUUID();
+        this.title = cmd.getTitle();
+        this.domain = cmd.getDomain();
+        this.source = cmd.getSource();
+        this.contributor = cmd.getContributor();
+        this.citationInformation = cmd.getCitationInformation();
+        this.dataFields = cmd.getDataFields();
+        this.tasks = cmd.getTasks();
+        this.sentences = cmd.getSentences();
+        System.out.println("Create Augmented Document Command has received the following file: " + cmd.getSentences());
+        this.augmented = cmd.getAugmented();
+        this.augmentationInfos = cmd.getAugmentationInfos();
+        this.rootDocument = cmd.getRootDocument();
+        AggregateLifecycle.apply(new CreatedAugmentedDocumentEvent(documentId, title, domain, source, contributor,
+                citationInformation, dataFields, tasks, sentences, augmented, augmentationInfos, rootDocument));
     }
 
     @CommandHandler
@@ -75,9 +97,10 @@ public class Document {
         this.tasks = cmd.getTasks();
         this.data = cmd.getData();
         this.augmented = cmd.isAugmented();
+        this.augmentationInfos = cmd.getAugmentationInfos();
         this.rootDocument = cmd.getRootDocument();
         AggregateLifecycle.apply(new UpdatedDocumentEvent(id, title, domain, source, contributor,
-                citationInformation, dataFields, tasks, data, augmented, rootDocument));
+                citationInformation, dataFields, tasks, data, augmented, augmentationInfos, rootDocument));
     }
 
     @CommandHandler
@@ -110,6 +133,12 @@ public class Document {
 
     @EventSourcingHandler
     public void handle(CreatedDocumentEvent event) {
+        //Its mandatory in an EventSourcing Handler to set the aggregate identifier
+        id = event.getId();
+    }
+
+    @EventSourcingHandler
+    public void handle(CreatedAugmentedDocumentEvent event) {
         //Its mandatory in an EventSourcing Handler to set the aggregate identifier
         id = event.getId();
     }

@@ -1,5 +1,6 @@
 package com.example.documentservice.queries.querymodel;
 
+import com.example.documentservice.AugmentationInfo;
 import com.example.documentservice.DataField;
 import com.example.documentservice.Sentence;
 import com.example.documentservice.Task;
@@ -21,11 +22,12 @@ public class DocumentView {
     private List<Task> tasks;
     private List<Sentence> sentences;
     private boolean augmented;
+    private List<AugmentationInfo> augmentationInfos;
     private UUID rootDocument;
     private String uri;
 
     public DocumentView(UUID id, String title, String domain, String source, String contributor, String citationInformation,
-                        List<DataField> dataFields, List<Task> tasks, List<Sentence> sentences, boolean augmented,
+                        List<DataField> dataFields, List<Task> tasks, List<Sentence> sentences, boolean augmented, List<AugmentationInfo> augmentationInfos,
                         UUID rootDocument) {
         this.id = id;
         this.title = title;
@@ -37,6 +39,7 @@ public class DocumentView {
         this.tasks = tasks;
         this.sentences = sentences;
         this.augmented = augmented;
+        this.augmentationInfos = augmentationInfos;
         this.rootDocument = rootDocument;
         this.uri = "/documents/" + id.toString();
     }
@@ -79,6 +82,10 @@ public class DocumentView {
 
     public boolean getAugmented() {
         return augmented;
+    }
+
+    public List<AugmentationInfo> getAugmentationInfos() {
+        return augmentationInfos;
     }
 
     public UUID getRootDocument() {
@@ -124,6 +131,10 @@ public class DocumentView {
 
     public void setAugmented(boolean augmented) {
         this.augmented = augmented;
+    }
+
+    public void setAugmentationInfos(List<AugmentationInfo> augmentationInfos) {
+        this.augmentationInfos = augmentationInfos;
     }
 
     public void setRootDocument(UUID rootDocument) {

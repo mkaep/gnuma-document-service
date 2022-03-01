@@ -1,5 +1,6 @@
 package com.example.documentservice.events;
 
+import com.example.documentservice.AugmentationInfo;
 import com.example.documentservice.DataField;
 import com.example.documentservice.Task;
 
@@ -18,11 +19,12 @@ public class UpdatedDocumentEvent {
     private final List<Task> tasks;
     private final File data;
     private final boolean augmented;
+    private final List<AugmentationInfo> augmentationInfos;
     private final UUID rootDocument;
 
     public UpdatedDocumentEvent(UUID id, String title, String domain, String source, String contributor, String citationInformation,
                                 List<DataField> dataFields, List<Task> tasks, File data,
-                                boolean augmented, UUID rootDocument) {
+                                boolean augmented, List<AugmentationInfo> augmentationInfos, UUID rootDocument) {
         this.id = id;
         this.title = title;
         this.domain = domain;
@@ -33,6 +35,7 @@ public class UpdatedDocumentEvent {
         this.tasks = tasks;
         this.data = data;
         this.augmented = augmented;
+        this.augmentationInfos = augmentationInfos;
         this.rootDocument = rootDocument;
     }
 
@@ -76,6 +79,10 @@ public class UpdatedDocumentEvent {
         return augmented;
     }
 
+    public List<AugmentationInfo> getAugmentationInfos() {
+        return augmentationInfos;
+    }
+
     public UUID getRootDocument() {
         return rootDocument;
     }
@@ -93,6 +100,7 @@ public class UpdatedDocumentEvent {
                 ", tasks=" + tasks +
                 ", data=" + data +
                 ", augmented=" + augmented +
+                ", augmentationInfos=" + augmentationInfos +
                 ", rootDocument=" + rootDocument +
                 '}';
     }

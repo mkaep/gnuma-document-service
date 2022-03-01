@@ -1,5 +1,6 @@
 package com.example.documentservice.commands;
 
+import com.example.documentservice.AugmentationInfo;
 import com.example.documentservice.DataField;
 import com.example.documentservice.Task;
 
@@ -18,12 +19,10 @@ public class CreateDocumentCommand {
     private final List<DataField> dataFields;
     private final List<Task> tasks;
     private final File data;
-    private final boolean augmented;
-    private final UUID rootDocument;
+
 
     public CreateDocumentCommand(String title, String domain, String source, String contributor, String citationInformation,
-                                 List<DataField> dataFields, List<Task> tasks, File data,
-                                 boolean augmented, UUID rootDocument) {
+                                 List<DataField> dataFields, List<Task> tasks, File data) {
         this.title = title;
         this.domain = domain;
         this.source = source;
@@ -32,8 +31,6 @@ public class CreateDocumentCommand {
         this.dataFields = dataFields;
         this.tasks = tasks;
         this.data = data;
-        this.augmented = augmented;
-        this.rootDocument = rootDocument;
     }
 
     public String getTitle() {
@@ -68,25 +65,18 @@ public class CreateDocumentCommand {
         return data;
     }
 
-    public boolean isAugmented() {
-        return augmented;
-    }
-
-    public UUID getRootDocument() {
-        return rootDocument;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreateDocumentCommand that = (CreateDocumentCommand) o;
-        return augmented == that.augmented && Objects.equals(title, that.title) && Objects.equals(domain, that.domain) && Objects.equals(source, that.source) && Objects.equals(contributor, that.contributor) && Objects.equals(citationInformation, that.citationInformation) && Objects.equals(dataFields, that.dataFields) && Objects.equals(tasks, that.tasks) && Objects.equals(data, that.data) && Objects.equals(rootDocument, that.rootDocument);
+        return title.equals(that.title) && domain.equals(that.domain) && source.equals(that.source) && contributor.equals(that.contributor) && citationInformation.equals(that.citationInformation) && dataFields.equals(that.dataFields) && tasks.equals(that.tasks) && data.equals(that.data);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, domain, source, contributor, citationInformation, dataFields, tasks, data, augmented, rootDocument);
+        return Objects.hash(title, domain, source, contributor, citationInformation, dataFields, tasks, data);
     }
 
     @Override
@@ -100,8 +90,6 @@ public class CreateDocumentCommand {
                 ", dataFields=" + dataFields +
                 ", tasks=" + tasks +
                 ", data=" + data +
-                ", augmented=" + augmented +
-                ", rootDocument=" + rootDocument +
                 '}';
     }
 }

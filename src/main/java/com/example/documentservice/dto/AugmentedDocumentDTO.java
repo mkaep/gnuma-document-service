@@ -2,6 +2,7 @@ package com.example.documentservice.dto;
 
 import com.example.documentservice.AugmentationInfo;
 import com.example.documentservice.DataField;
+import com.example.documentservice.Sentence;
 import com.example.documentservice.Task;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DocumentDTO {
+public class AugmentedDocumentDTO {
 
     private String title;
     private String domain;
@@ -22,15 +23,17 @@ public class DocumentDTO {
     private String citationInformation;
     private List<DataField> dataFields = new ArrayList<DataField>();
     private List<Task> tasks;
-    private File data;
+    private List<Sentence> sentences;
+    private boolean augmented;
+    private List<AugmentationInfo> augmentationInfos = new ArrayList<AugmentationInfo>();
+    private UUID rootDocument;
 
-
-    public DocumentDTO() {
+    public AugmentedDocumentDTO() {
 
     }
 
-    public DocumentDTO(String title, String domain, String source, String contributor, String citationInformation,
-                       List<DataField> dataFields, List<Task> tasks, MultipartFile data)  {
+    public AugmentedDocumentDTO(String title, String domain, String source, String contributor, String citationInformation,
+                                List<DataField> dataFields, List<Task> tasks, List<Sentence> sentences, boolean augmented, List<AugmentationInfo> augmentationInfos, UUID rootDocument)  {
         this.title = title;
         this.domain = domain;
         this.source = source;
@@ -38,13 +41,10 @@ public class DocumentDTO {
         this.citationInformation = citationInformation;
         this.dataFields = dataFields;
         this.tasks = tasks;
-        File file = new File("src/main/resources/data.tmp");
-        try (OutputStream os = new FileOutputStream(file)) {
-            os.write(data.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.data = file;
+        this.sentences = sentences;
+        this.augmented = augmented;
+        this.augmentationInfos = augmentationInfos;
+        this.rootDocument = rootDocument;
     }
 
     public String getTitle() {
@@ -75,8 +75,20 @@ public class DocumentDTO {
         return tasks;
     }
 
-    public File getData() {
-        return data;
+    public List<Sentence> getSentences() {
+        return sentences;
+    }
+
+    public boolean getAugmented() {
+        return augmented;
+    }
+
+    public List<AugmentationInfo> getAugmentationInfos() {
+        return augmentationInfos;
+    }
+
+    public UUID getRootDocument() {
+        return rootDocument;
     }
 
     public void setTitle(String title) {
@@ -107,14 +119,20 @@ public class DocumentDTO {
         this.tasks = tasks;
     }
 
-    public void setData(MultipartFile data) {
-        File file = new File("src/main/resources/data.tmp");
-        try (OutputStream os = new FileOutputStream(file)) {
-            os.write(data.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.data = file;
+    public void setSentences(List<Sentence> sentences) {
+        this.sentences = sentences;
+    }
+
+    public void setAugmented(boolean augmented) {
+        this.augmented = augmented;
+    }
+
+    public void setAugmentationInfos(List<AugmentationInfo> augmentationInfos) {
+        this.augmentationInfos = augmentationInfos;
+    }
+
+    public void setRootDocument(UUID rootDocument) {
+        this.rootDocument = rootDocument;
     }
 
     @Override
@@ -127,7 +145,10 @@ public class DocumentDTO {
                 ", citationInformation='" + citationInformation + '\'' +
                 ", dataFields=" + dataFields +
                 ", tasks=" + tasks +
-                ", data=" + data +
+                ", sentences=" + sentences +
+                ", augmented=" + augmented +
+                ", augmentationInfos=" + augmentationInfos +
+                ", rootDocument=" + rootDocument +
                 '}';
     }
 }
